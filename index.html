@@ -1,59 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="/">
-
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="metronome">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>metronome</title>
-  <link rel="manifest" href="manifest.json">
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "4270214584";
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPR</title>
+  <style>
+    * { margin: 0; padding: 0; }
+    body { background: white; }
+  </style>
 </head>
 <body>
-  <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
-  </script>
+<script src="flutter.js" defer></script>
+
+<script>
+  // 声音系统（100% 安全，Flutter Web 专用）
+  let audioContext;
+
+  // 自动初始化音频（用户点击后生效，浏览器要求）
+  document.addEventListener('click', function init() {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    document.removeEventListener('click', init);
+  });
+
+  // 节拍音
+  function playBeep() {
+    if (!audioContext) return;
+    const o = audioContext.createOscillator();
+    const g = audioContext.createGain();
+    o.type = 'sine';
+    o.frequency.value = 880;
+    g.gain.value = 0.3;
+    o.connect(g);
+    g.connect(audioContext.destination);
+    o.start();
+    o.stop(audioContext.currentTime + 0.1);
+  }
+
+  // 每 500ms 播放一次节拍
+  setInterval(() => {
+    if (document.visibilityState === 'visible') {
+      playBeep();
+    }
+  }, 500);
+</script>
 </body>
 </html>
