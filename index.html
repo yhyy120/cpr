@@ -3,26 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CPR</title>
-  <style>
-    * { margin: 0; padding: 0; }
-    body { background: white; }
-  </style>
+  <title>CPR 心肺复苏计时器</title>
+  <!-- 直接屏蔽 favicon 请求，解决 404 报错 -->
+  <link rel="icon" href="data:,">
+  <style>body { margin: 0; background: white; }</style>
 </head>
 <body>
 <script src="flutter.js" defer></script>
 
 <script>
-  // 声音系统（100% 安全，Flutter Web 专用）
   let audioContext;
-
-  // 自动初始化音频（用户点击后生效，浏览器要求）
   document.addEventListener('click', function init() {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
     document.removeEventListener('click', init);
   });
 
-  // 节拍音
   function playBeep() {
     if (!audioContext) return;
     const o = audioContext.createOscillator();
@@ -36,11 +31,8 @@
     o.stop(audioContext.currentTime + 0.1);
   }
 
-  // 每 500ms 播放一次节拍
   setInterval(() => {
-    if (document.visibilityState === 'visible') {
-      playBeep();
-    }
+    if (document.visibilityState === 'visible') playBeep();
   }, 500);
 </script>
 </body>

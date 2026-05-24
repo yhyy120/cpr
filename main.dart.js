@@ -31694,7 +31694,7 @@ $0(){var s=this.a
 if(++s.d>=100){s.d=0;++s.e}if(s.e>=60){s.e=0;++s.f}},
 $S:0}
 A.TQ.prototype={
-$1(a){this.a.NG()},
+$1(a){return this.a.NG()},
 $S:107}
 A.TR.prototype={
 $0(){var s,r=this.a
